@@ -4,12 +4,25 @@ pipeline {
         stage('Example') {
             steps {
                 script {
-                    dir("/home/ankitraut0987") {
+                    dir("/var/lib/jenkins/workspace/multibranch_demo_main") {
                         // Change to the desired working directory
+
+                        // Ensure correct ownership and permissions for the Jenkins workspace
+                        sh "sudo chown -R jenkins:jenkins ."
+
+                        // Clone the specific branch from the Git repository
+                        sh "rm -rf Jenkins-Test"
                         sh "git clone -b test --single-branch https://github.com/ankitr-c/Jenkins-Test.git"
-                        sh "chown jenkins:jenkins /home/ankitraut0987/Jenkins-Test/script.sh"
-                        sh "chmod +x /home/ankitraut0987/Jenkins-Test/script.sh"
-                        sh "bash /home/ankitraut0987/Jenkins-Test/script.sh"
+                        
+                        // Change to the cloned repository directory
+                        dir("Jenkins-Test") {
+                            // Ensure correct ownership and permissions for script.sh
+                            sh "sudo chown jenkins:jenkins script.sh"
+                            sh "chmod +x script.sh"
+
+                            // Execute the script
+                            sh "bash script.sh"
+                        }
                     }
                 }
             }
