@@ -1,0 +1,4 @@
+sudo visudo
+
+
+jenkins ALL=(ALL) NOPASSWD: ALL
