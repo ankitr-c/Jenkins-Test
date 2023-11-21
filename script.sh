@@ -5,4 +5,4 @@ sudo systemctl enable apache2
 sudo rm -rf /var/www/html
 sudo rm -rf /var/www
 sudo mkdir -p /var/www/html
-sudo mv /home/ankitraut0987/Jenkins-Test/index.html /var/www/html
+sudo cp /var/lib/jenkins/workspace/multibranch_demo_main/Jenkins-Test/index.html /var/www/html
