@@ -10,11 +10,22 @@ pipeline {
                         // Ensure correct ownership and permissions for the Jenkins workspace
                         sh "sudo chown -R jenkins:jenkins ."
 
-                        // Clone the specific branch from the Git repository
-                        sh "git clone -b main --single-branch https://github.com/ankitr-c/Jenkins-Test.git"
-                        
+                        // Check if the directory already exists
+                        def repoDir = "Jenkins-Test"
+                        if (fileExists(repoDir)) {
+                            // If the directory exists, pull the latest changes
+                            echo "Directory already exists. Pulling changes..."
+                            dir(repoDir) {
+                                sh "git pull origin main"
+                            }
+                        } else {
+                            // If the directory doesn't exist, clone the repository
+                            echo "Cloning repository for the first time..."
+                            sh "git clone -b main --single-branch https://github.com/ankitr-c/Jenkins-Test.git ${repoDir}"
+                        }
+
                         // Change to the cloned repository directory
-                        dir("Jenkins-Test") {
+                        dir(repoDir) {
                             // Ensure correct ownership and permissions for script.sh
                             sh "sudo chown jenkins:jenkins script.sh"
                             sh "chmod +x script.sh"
