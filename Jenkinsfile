@@ -16,10 +16,14 @@ pipeline {
                             // If the directory exists, pull the latest changes
                             echo "Directory already exists. Pulling changes..."
                             dir(repoDir) {
+                                // Stash local changes before pulling
+                                sh "git stash"
+
+                                // Pull changes from the remote repository
                                 sh "git pull origin main"
                             }
                         } else {
-                            // If the directory doesn't exist, clone the repository
+                            // If the directory doesn't exist, clone the repository for the first time
                             echo "Cloning repository for the first time..."
                             sh "git clone -b main --single-branch https://github.com/ankitr-c/Jenkins-Test.git ${repoDir}"
                         }
@@ -29,6 +33,9 @@ pipeline {
                             // Ensure correct ownership and permissions for script.sh
                             sh "sudo chown jenkins:jenkins script.sh"
                             sh "chmod +x script.sh"
+
+                            // Apply stashed changes if any
+                            sh "git stash apply"
 
                             // Execute the script
                             sh "bash script.sh"
